@@ -21,7 +21,7 @@
 
 Решение:
 
-Сразу проблема: стенд №1 не запускается.
+1) Сразу проблема: стенд №1 не запускается.
 После долгой диагностики стало понятно, что репозитории на mirror.centos.org не доступны из РФ.
 Либо пробрасывать впн на виртуалку, либо использовать альтернативные репозитории. Выбираю второе.
 
@@ -29,8 +29,39 @@
 
 Также доустановим policycoreutils-python, т.к. по умолчанию audit2why не установлен.
 
+2) Здесь та же ситуация, что и в первом случае. Я добавил в начало playbook.yml:
 
+- hosts: all # part running on all hosts
+  
+  become: true
+  
+  tasks:
+  
+  - name: copy repo CentOS-Base.repo
+  
+    copy:
+  
+      src: files/CentOS-Base.repo
+  
+      dest: /etc/yum.repos.d/CentOS-Base.repo
+  
+      owner: root
+  
+      group: root
+  
+      mode: 0644
 
-Последовательность моих действий с описанием в README.txt
-Автоматизация в вагранте. Прилагается Vagrantfile и script.sh
+Исправленный CentOS-Base.repo я положил в files
+
+Итого cделано:
+
+Последовательность моих действий с подробным описанием в README.txt
+
+1) Каталог "1".
+
+   Исправленный репозиторий CentOS-Base.repo и исправленный Vagrant file
+   
+2) Каталог "2". 
+Исправлен playbook.yml. Можно посмотреть здесь: selinux/2/selinux_dns_problems/provisioning
+Добавлен файл с исправленным репозиторием: selinux/2/selinux_dns_problems/provisioning/files
 
